@@ -1,4 +1,3 @@
-```markdown
 # 🌌 Eldritch Game
 
 Um projeto independente de jogo de investigação e **horror cósmico**, inspirado em *Eldritch Horror* e desenvolvido como projeto de estudo e experimentação em **HTML, CSS e JavaScript**.
