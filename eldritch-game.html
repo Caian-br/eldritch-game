@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Vigília do Abismo</title>
+<style>
+:root{--bg:#efe7d3;--fg:#241b10;--cd:#fbf4e2;--ac:#7a1414;--ac2:#b08a2e;--mu:#5f5340;--bd:#c9b88f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14100c;--fg:#ecdfc4;--cd:#231b13;--ac:#c85a4a;--ac2:#d9b25f;--mu:#a89675;--bd:#413522}}
+:root[data-theme="dark"]{--bg:#14100c;--fg:#ecdfc4;--cd:#231b13;--ac:#c85a4a;--ac2:#d9b25f;--mu:#a89675;--bd:#413522}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:14.5px/1.4 Georgia,serif;max-width:1080px;margin:auto;padding:10px}
+h1{font-size:24px;margin:2px 0 8px;color:var(--ac);text-align:center;letter-spacing:1px}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin:8px 0;box-shadow:0 2px 6px #0002}
+button{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:8px 12px;margin:3px 4px 3px 0;font:inherit;font-size:14px;cursor:pointer;box-shadow:0 1px 3px #0004}
+button:hover{filter:brightness(1.12)}button.ghost{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:640px){.g{grid-template-columns:1fr}}
+#lg{max-height:130px;overflow:auto;font-size:12.5px;color:var(--mu)}#lg div{padding:1px 0;border-bottom:1px dashed var(--bd)}
+#lg div.myth{color:var(--fg);font-weight:bold}
+svg{width:100%;max-width:100%}svg text{fill:var(--fg);font-size:9.5px;font-family:Georgia,serif}
+#ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;text-align:center;color:#fff;font-size:20px;z-index:9}
+.m{color:var(--mu);font-size:13px}.a{outline:3px solid var(--ac2)}
+.tag{display:inline-block;background:var(--ac2);color:#211a08;border-radius:4px;padding:1px 6px;font-size:11px;margin-left:4px}
+.pick{cursor:pointer;border:2px solid var(--bd);border-radius:8px;padding:7px;margin:4px;display:inline-block;width:210px;vertical-align:top;font-size:13px}
+.pick.sel{border-color:var(--ac2);background:#ffffff11}
+#setup{max-width:800px;margin:auto}
+.bar{background:#0002;border-radius:5px;height:9px;overflow:hidden;margin:3px 0}
+.bar>i{display:block;height:100%;background:var(--ac)}
+.card{display:inline-block;border:1px solid var(--ac2);border-radius:7px;padding:5px 7px;margin:3px;background:#00000008;font-size:12px;vertical-align:top;max-width:180px}
+.card b{color:var(--ac)}
+.cardsPanel{min-height:30px}
+select{font:inherit;padding:4px;border-radius:5px;border:1px solid var(--bd)}
+</style></head><body>
+<h1>🐙 Vigília do Abismo</h1>
+<div id="setup"></div>
+<div id="game" style="display:none">
+<div class="c" id="st"></div><div class="c"><svg id="mp" viewBox="0 0 900 430"></svg></div>
+<div class="c" id="bt"></div>
+<div class="c"><b>Cartas na mesa</b><div class="cardsPanel" id="cp"></div></div>
+<div class="g" id="iv"></div>
+<div class="c m" id="lg"></div></div>
+<div id="ov"><div id="ovt"></div></div>
+<script>
+const R=n=>Math.floor(Math.random()*n),sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+/* ===================== MAPA — 36 locais (15 nomeados + 21 numerados, como no tabuleiro) ===================== */
+const N=[['São Francisco','C'],['Arkham','C'],['Espaço 1','C'],['Espaço 2','S'],['Espaço 3','S'],['Espaço 4','W'],['Espaço 5','W'],['Buenos Aires','C'],['Amazônia','W'],['Espaço 7','W'],['Espaço 8','S'],['Espaço 6','C'],['Londres','C'],['Espaço 9','W'],['Espaço 14','C'],['Roma','C'],['Espaço 10','W'],['Pirâmides','W'],['Coração da África','W'],['Espaço 15','C'],['Espaço 11','S'],['Espaço 12','S'],['Antártica','W'],['Istambul','C'],['Espaço 16','W'],['Espaço 17','C'],['Tunguska','W'],['Espaço 19','W'],['Himalaias','W'],['Espaço 18','S'],['Tóquio','C'],['Xangai','C'],['Espaço 20','C'],['Espaço 21','W'],['Sydney','C'],['Espaço 13','S']];
+const P=[[70,150],[160,140],[60,230],[40,190],[90,320],[150,190],[190,170],[150,350],[190,300],[220,260],[260,230],[240,180],[330,90],[350,60],[380,140],[400,170],[340,240],[380,270],[360,310],[400,340],[300,370],[380,400],[440,405],[480,150],[540,120],[560,220],[600,90],[630,70],[600,190],[550,340],[700,140],[660,200],[700,270],[740,330],[720,390],[640,80]];
+const RT=[[0,1,'T'],[0,2,'T'],[0,3,'B'],[1,2,'T'],[1,11,'T'],[2,11,'T'],[3,4,'B'],[4,7,'B'],[5,6,'T'],[5,9,'T'],[6,11,'T'],[7,8,'T'],[7,20,'B'],[8,9,'T'],[8,18,'B'],[9,10,'B'],[10,11,'B'],[10,20,'B'],[11,12,'T'],[12,13,'T'],[12,14,'T'],[13,24,'T'],[14,15,'T'],[14,23,'T'],[15,16,'T'],[15,19,'B'],[16,17,'T'],[16,18,'T'],[17,19,'B'],[17,23,'B'],[18,19,'T'],[18,20,'B'],[19,21,'B'],[20,21,'B'],[21,22,'B'],[22,29,'B'],[23,24,'T'],[23,25,'T'],[24,26,'T'],[24,35,'T'],[25,28,'T'],[25,29,'B'],[26,27,'T'],[26,28,'T'],[27,35,'T'],[28,29,'B'],[28,30,'T'],[29,32,'B'],[30,31,'T'],[30,35,'T'],[31,32,'T'],[31,25,'T'],[32,33,'T'],[33,34,'B'],[34,29,'B']];
+const CS=N.map((_,i)=>i%5),SK=['Conhecimento','Influência','Observação','Força','Determinação'];
+const G=['◆','▲','●'],OM=['Verde','Amarelo','Azul'];
+
+/* ===================== MODELOS DE CARTA — copie o formato e adicione as suas ===================== */
+// RECURSO (Resource): n=nome, v=valor p/ compra, sk=índice da proficiência (0-4), b=bônus, cmb=1 se só vale em combate
+const RECURSOS=[{n:'Revólver .38',v:1,sk:3,b:2,cmb:1},{n:'Lanterna',v:1,sk:2,b:1},{n:'Tomo Arcano',v:2,sk:0,b:1},{n:'Contatos',v:2,sk:1,b:1},{n:'Amuleto',v:1,sk:4,b:1},{n:'Casaco Forrado',v:1,sk:3,b:1},{n:'Faca Ritual',v:2,sk:3,b:2,cmb:1},{n:'Cânfora',v:1,sk:0,b:1}];
+// MODELO de Artefato — Artefatos não são descartados na Ação de Adquirir Recursos comum; adicione os seus aqui
+const ARTEFATOS=[{n:'[Nome do Artefato — exemplo]',v:3,sk:0,b:3,texto:'Efeito de exemplo: Ganhe +3 em Conhecimento; 1x por partida, ignore o efeito de falha de um Encontro.'}];
+// MODELO de Feitiço (Magia) — teste de Determinação para lançar
+const MAGIAS=[{n:'[Nome do Feitiço — exemplo]',sk:4,texto:'Ação: teste Determinação. Sucesso: efeito benéfico de exemplo. Falha: perca 1 de Sanidade.'}];
+// MODELO de Condição — efeito contínuo até ser descartada
+const CONDICOES=[{n:'[Nome da Condição — exemplo]',texto:'Efeito de exemplo: enquanto tiver esta Condição, role -1 dado em testes de Força.'}];
+// MONSTROS (n, horror, dano, resistência, modHorrorTest, modDanoTest)
+const MONSTROS=[['Carniçal',1,1,2,0,0],['Cultista',0,1,1,0,0],['Profundo',2,2,2,-1,0],['Zumbi',1,2,2,0,-1],['Sombra Rastejante',2,1,3,0,0],['Bruxa',2,1,2,-1,0],['Aberração',3,2,3,0,-1],['Lobisomem',1,3,3,0,0],['Vulto',2,2,2,0,0]];
+// MODELO de Monstro Único — mesmo formato do array acima; adicione linhas nesse array
+// ['Nome do Monstro', horror, dano, resistência, modTesteHorror, modTesteDano]
+
+// MODELO de carta do Mito — cor G(verde)/Y(amarela)/B(azul), título e texto lido na Fase do Mito
+const MITO_CARTAS=[{cor:'G',titulo:'[Nome da carta do Mito — exemplo]',texto:'Texto narrativo de exemplo. Efeito de exemplo: avance a Perdição em 1 se houver 2+ Portais no tabuleiro.'}];
+// MODELO de Mistério — anc = nome do Ancião a que pertence, local = onde resolver, pistas = custo
+const MISTERIOS=[{anc:'Shub-Niggurath',titulo:'[Nome do Mistério — exemplo]',local:'Arkham',pistas:3,texto:'Descrição de exemplo do que investigar para solucionar este Mistério.'}];
+// MODELO de carta de Pesquisa — obtida ao resolver um Encontro de Pesquisa (marcador de Pista)
+const PESQUISA=[{n:'[Nome da carta de Pesquisa — exemplo]',sk:2,texto:'Efeito de exemplo: teste Observação. Sucesso: ganhe 1 Pista extra. Falha: perca 1 de Sanidade.'}];
+/* ===================== FIM DOS MODELOS ===================== */
+
+/* 16 investigadores reais, com habilidade Ativa (ação) e Passiva (constante) */
+const INV=[
+{n:'Silas Marsh',hp:8,sn:4,sk:[1,3,2,3,4],act:'Mover 1 espaço por rota de Barco, depois realizar 1 ação extra.',pas:'Em espaço de Mar, investigadores ali rolam +1 dado em testes.'},
+{n:'Akachi Onyele',hp:5,sn:7,sk:[3,2,2,2,4],act:'Olhar os 2 Portais do topo da pilha e reordená-los.',pas:'Ao fechar um Portal em Outro Mundo, pode mover-se para um espaço com Pista ou Portal.'},
+{n:'Charlie Kane',hp:4,sn:8,sk:[2,4,2,1,3],act:'Outro investigador realiza 1 ação extra imediatamente.',pas:'Ao Adquirir Recursos, pode ceder as cartas compradas a outro investigador.'},
+{n:'Leo Anderson',hp:6,sn:6,sk:[2,2,3,4,3],act:'Teste Determinação; se passar, ganhe 1 carta da reserva.',pas:'Em Terreno Selvagem, investigadores ali rolam +1 dado em testes.'},
+{n:'Lily Chen',hp:6,sn:6,sk:[2,2,4,3,3],act:'Gaste Vida para recuperar igual Sanidade (ou vice-versa).',pas:'Ao aprimorar uma proficiência, aprimore-a novamente imediatamente.'},
+{n:'Norman Withers',hp:5,sn:7,sk:[3,1,3,2,4],act:'Gaste 2 Pistas para descartar 1 Monstro num espaço com Portal.',pas:'1x por rodada, pode gastar 1 Sanidade no lugar de 1 Pista.'},
+{n:'Diana Stanley',hp:7,sn:5,sk:[1,3,2,4,3],act:'Descarte o Monstro mais fraco do seu espaço.',pas:'O Horror de Monstros que você encontra é reduzido para 1.'},
+{n:'Lola Hayes',hp:5,sn:7,sk:[2,4,2,3,1],act:'Gaste Fichas de Aprimoramento para melhorar proficiências.',pas:'1x por rodada, um investigador no seu espaço rola +1 dado num teste.'},
+{n:'Jim Culver',hp:7,sn:5,sk:[1,2,4,3,3],act:'Cada investigador no seu espaço recupera 1 Sanidade.',pas:'Investigadores no seu espaço rolam +1 dado em Encontros de Combate.'},
+{n:'Mark Harrigan',hp:8,sn:4,sk:[1,2,1,4,4],act:'Você e 1 Monstro no seu espaço perdem 1 de Vida cada.',pas:'Você não fica Atrasado nem ganha Condição de Detido, a menos que escolha.'},
+{n:'Jacqueline Fine',hp:4,sn:8,sk:[4,2,3,1,2],act:'Troque qualquer quantidade de Pistas com um investigador em qualquer espaço.',pas:'1x por rodada, ao outro investigador ganhar Condição, você pode ganhar 1 Pista.'},
+{n:'Trish Scarborough',hp:7,sn:5,sk:[1,3,4,2,3],act:'Se não tiver Pistas, ganhe 1 Pista.',pas:'Investigadores no seu espaço podem rerrolar até 2 dados ao gastar 1 Pista.'},
+{n:'Daisy Walker',hp:5,sn:7,sk:[4,3,1,1,3],act:'Se em Cidade, teste Observação; se passar, ganhe 1 carta da reserva.',pas:'Ao Descansar, realize 1 ação extra de um item que possua.'},
+{n:'Agnes Baker',hp:7,sn:5,sk:[2,3,3,2,1],act:'Teste Determinação –1; se passar, recupere 1 Sanidade extra.',pas:'Pode gastar 1 Vida para rolar +2 dados em testes de efeito de Feitiço.'},
+{n:'Finn Edwards',hp:6,sn:6,sk:[2,3,3,2,1],act:'Você e/ou outro investigador no seu espaço move 1 espaço extra por Trem ou Barco.',pas:'Efeitos não podem forçar descarte de seus itens, a menos que você escolha.'},
+{n:'George Barnaby',hp:4,sn:8,sk:[4,3,2,1,3],act:'Teste Influência; a cada sucesso, recupere 1 de Sanidade.',pas:'1x por rodada, gaste 1 carta para +1 num dado de um teste.'}];
+
+/* 4 Anciões reais */
+const ANC=[{n:'Shub-Niggurath',sub:'A Cabra Negra dos Bosques',doom:13,my:[[1,2,1],[3,2,1],[2,4,0]],fin:'Batalha no Bosque — derrote o Monstro Épico Shub-Niggurath.'},
+{n:'Yog-Sothoth',sub:'O Espreitador do Limiar',doom:14,my:[[0,2,1],[2,3,1],[3,4,0]],fin:'A Chave e o Portal — confronte Yog-Sothoth num espaço com Portal.'},
+{n:'Cthulhu',sub:'A Loucura Vinda do Mar',doom:12,my:[[0,2,2],[1,3,0],[3,4,0]],fin:'Ressurgido do Mar — derrote o Monstro Épico Cthulhu.'},
+{n:'Azathoth',sub:'O Sultão Demônio',doom:15,my:[[1,2,1],[2,3,1],[2,4,0]],fin:'O Mundo é Devorado — evite que a Perdição chegue a 0 após o despertar.'}];
+
+let s,sel={a:0,np:2,inv:[]};
+function setupUI(){const el=document.getElementById('setup');
+ el.innerHTML=`<div class="c"><b>1. Número de Jogadores</b><br><select onchange="sel.np=+this.value;sel.inv=sel.inv.slice(0,sel.np);setupUI()">${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}" ${sel.np==n?'selected':''}>${n}</option>`).join('')}</select></div>
+ <div class="c"><b>2. Escolha o Ancião</b><br>${ANC.map((a,i)=>`<div class="pick ${sel.a==i?'sel':''}" onclick="sel.a=${i};setupUI()"><b>${a.n}</b><div class="m">${a.sub}</div><div class="m">Perdição inicial: ${a.doom}</div></div>`).join('')}</div>
+ <div class="c"><b>3. Escolha ${sel.np} Investigador(es)</b> <span class="m">(${sel.inv.length}/${sel.np})</span><br>${INV.map((v,i)=>`<div class="pick ${sel.inv.includes(i)?'sel':''}" onclick="tglInv(${i})"><b>${v.n}</b><br>❤${v.hp} 🧠${v.sn}<div class="m">${SK.map((k,j)=>k.slice(0,3)+' '+v.sk[j]).join(' · ')}</div><div class="m"><b>Ativa:</b> ${v.act}</div><div class="m"><b>Passiva:</b> ${v.pas}</div></div>`).join('')}</div>
+ <button ${sel.inv.length!=sel.np?'disabled':''} onclick="nw()">Começar Investigação</button>`}
+function tglInv(i){const p=sel.inv.indexOf(i);if(p>=0)sel.inv.splice(p,1);else if(sel.inv.length<sel.np)sel.inv.push(i);setupUI()}
+function nw(){const anc=ANC[sel.a];const d=[];anc.my.forEach(([g,y,b])=>d.push(...sh([...Array(g).fill('G'),...Array(y).fill('Y'),...Array(b).fill('B')])));
+ s={anc,inv:sel.inv.map((ix,i)=>({...INV[ix],i,mh:INV[ix].hp,ms:INV[ix].sn,at:i%N.length,cl:0,tk:[],it:[],im:[0,0,0,0,0]})),lead:0,acts:2,used:{},moved:0,tkm:0,ph:'act',doom:anc.doom,omen:0,gates:{},mon:{},clues:{},deck:d,mys:0,awake:0,dk:sh([...RECURSOS,...RECURSOS]),rs:[],fought:{},over:0,lg:[],lastMyth:null};
+ s.rs=s.dk.splice(0,4);spawnGate();spawnClue();spawnClue();log(`Preparação concluída. Ancião: ${anc.n}. Perdição em ${anc.doom}. Solucionem 3 Mistérios para vencer.`,1);s.cur=0;
+ document.getElementById('setup').style.display='none';document.getElementById('game').style.display='block';render()}
+function log(t,main){if(main)s.lg.unshift(t)} // log só recebe ações principais e texto de cartas do Mito
+function spawnMon(c){const m=MONSTROS[R(MONSTROS.length)];(s.mon[c]=s.mon[c]||[]).push({n:m[0],hor:m[1],dmg:m[2],res:m[3],mh:m[4],md:m[5],h:0})}
+function spawnGate(){const f=N.map((_,i)=>i).filter(i=>!(i in s.gates));if(!f.length)return;const c=f[R(f.length)];s.gates[c]=R(3);spawnMon(c)}
+function spawnClue(){const f=N.map((_,i)=>i).filter(i=>!s.clues[i]);if(f.length){const c=f[R(f.length)];s.clues[c]=1}}
+function T(v,k,mod=0,cmb=0){const b=Math.max(0,...v.it.filter(i=>i.sk==k&&(!i.cmb||cmb)).map(i=>i.b));const n=Math.max(1,v.sk[k]+v.im[k]+mod+b);let r=Array.from({length:n},()=>1+R(6));
+ while(v.cl>0&&r.some(x=>x<5)&&confirm(`${v.n} testa ${SK[k]} (${n} dados): [${r}] = ${r.filter(x=>x>=5).length} sucesso(s). Gastar 1 Pista para rerrolar 1 dado?`)){v.cl--;r[r.findIndex(x=>x<5)]=1+R(6)}
+ return r.filter(x=>x>=5).length}
+function hurt(v,h,sn){v.hp=Math.max(0,v.hp-h);v.sn=Math.max(0,v.sn-sn);if(!v.def&&(v.hp<=0||v.sn<=0))defeat(v)}
+function heal(v,h,sn){v.hp=Math.min(v.mh,v.hp+h);v.sn=Math.min(v.ms,v.sn+sn)}
+function defeat(v){v.def=1;s.doom--;v.cl=0;v.it=[];v.tk=[];log(`${v.n} foi DERROTADO! A Perdição avança (–1).`,1);if(s.awake)v.out=1;chk()}
+function chk(){if(s.doom<=0&&!s.awake){s.doom=0;s.awake=1;log(`☠ ${s.anc.n} DESPERTOU! Mistério Final: ${s.anc.fin}`,1)}
+ if(s.inv.every(v=>v.out))end(0,'Todos os investigadores foram eliminados.')}
+function end(w,t){s.over=1;document.getElementById('ov').style.display='flex';document.getElementById('ovt').innerHTML=`<b>${w?'VITÓRIA':'DERROTA'}</b><br>${t}<br><br><button onclick="document.getElementById('ov').style.display='none';document.getElementById('game').style.display='none';document.getElementById('setup').style.display='block';sel={a:0,np:2,inv:[]};setupUI()">Nova Partida</button>`}
+const V=()=>s.inv[s.cur],mons=c=>s.mon[c]||[];
+const rtOf=(a,b)=>RT.find(r=>(r[0]==a&&r[1]==b)||(r[0]==b&&r[1]==a));
+function nxt(){return s.inv.findIndex((v,i)=>i>s.cur&&!v.def&&!v.out)}
+function firstAlive(){return s.inv.findIndex(v=>!v.def&&!v.out)}
+function useAct(k){if(s.ph!='act')return 0;if(s.used[k]){alert('Cada ação só pode ser feita uma vez por turno.');return 0}s.used[k]=1;s.acts--;s.tkm=0;return 1}
+function after(){if(s.acts<=0)endAct();render()}
+function endAct(){const n=nxt();if(n>=0){s.cur=n;s.acts=2;s.used={};s.moved=0;s.tkm=0}else{s.ph='enc';s.cur=firstAlive();s.fought={};if(s.cur<0)s.ph='myth'}}
+function go(c){const v=V();if(s.ph!='act'||s.over)return;const r=rtOf(v.at,c);if(!r){alert('Só é possível viajar para espaços adjacentes.');return}
+ if(!s.moved){if(!useAct('trv'))return;s.moved=1;v.at=c;s.tkm=1;log(`${v.n} viaja para ${N[c][0]}.`,1);after()}
+ else if(s.tkm){const t=v.tk.indexOf(r[2]);if(t<0){alert('Você não tem um bilhete para essa rota (Trem/Barco).');return}v.tk.splice(t,1);v.at=c;log(`${v.n} gasta um bilhete e avança para ${N[c][0]}.`,1);render()}
+ else alert('Ação de Viajar já usada.')}
+function rest(){const v=V();if(mons(v.at).length){alert('Não é possível descansar com Monstro no espaço.');return}if(!useAct('rest'))return;heal(v,1,1);log(`${v.n} descansa (+1 Vida, +1 Sanidade).`,1);after()}
+function tick(t){const v=V(),ok=RT.some(r=>(r[0]==v.at||r[1]==v.at)&&r[2]==t);if(!ok){alert('Não há rota desse tipo conectada ao seu espaço.');return}if(!useAct('tk'))return;v.tk.push(t);if(v.tk.length>2)v.tk.shift();log(`${v.n} obtém bilhete de ${t=='T'?'Trem':'Barco'}.`,1);after()}
+function acq(){const v=V();if(N[v.at][1]!='C'){alert('Só em espaços de Cidade.');return}if(mons(v.at).length){alert('Não é possível com Monstro no espaço.');return}if(!useAct('acq'))return;const o=T(v,1);
+ [...s.rs].forEach(c=>{if(c.v<=o&&confirm(`Pegar "${c.n}" (valor ${c.v})?`)){v.it.push(c);s.rs[s.rs.indexOf(c)]=s.dk.length?s.dk.shift():null;log(`${v.n} recebe ${c.n}.`,1)}});s.rs=s.rs.filter(x=>x);while(s.rs.length<4&&s.dk.length)s.rs.push(s.dk.shift());after()}
+function trade(){const v=V(),o=s.inv.find(x=>x!=v&&x.at==v.at&&!x.def&&!x.out);if(!o||!v.cl){alert('Precisa de outro investigador no espaço e de 1 Pista.');return}if(!useAct('trd'))return;v.cl--;o.cl++;log(`${v.n} dá 1 Pista a ${o.n}.`,1);after()}
+function special(){const v=V();if(!useAct('sp'))return;
+ if(v.n=='Lily Chen'){const n=parseInt(prompt('Vida a gastar p/ recuperar mesma Sanidade (negativo = inverso):','1'))||0;if(n>0){const k=Math.min(n,v.hp-1,v.ms-v.sn);v.hp-=k;v.sn+=k}else if(n<0){const k=Math.min(-n,v.sn-1,v.mh-v.hp);v.sn-=k;v.hp+=k}}
+ else if(v.n=='Leo Anderson'||v.n=='Daisy Walker'){if(T(v,4)){const c=s.rs[0];if(c){v.it.push(c);s.rs.shift();if(s.dk.length)s.rs.push(s.dk.shift())}}}
+ else if(v.n=='Jacqueline Fine'||v.n=='Norman Withers'){const o=s.inv.find(x=>x!=v&&!x.def&&!x.out);if(o&&v.cl){v.cl--;o.cl++}}
+ else if(v.n=='Charlie Kane'){const o=s.inv.find(x=>x!=v&&!x.def&&!x.out);if(o){s.cur=o.i;s.acts++;log(`Charlie Kane concede uma ação extra a ${o.n}.`,1)}}
+ else if(v.n=='Silas Marsh'||v.n=='Finn Edwards'){const t=RT.find(r=>(r[0]==v.at||r[1]==v.at)&&(r[2]=='B'||r[2]=='T'));if(t){v.at=t[0]==v.at?t[1]:t[0];s.acts++}}
+ else if(v.n=='Jim Culver'){s.inv.filter(x=>x.at==v.at&&!x.def&&!x.out).forEach(x=>heal(x,0,1))}
+ else if(v.n=='Mark Harrigan'){const m=mons(v.at)[0];if(m){hurt(v,1,0);m.h++}}
+ else if(v.n=='Diana Stanley'){const ms=mons(v.at);if(ms.length){s.mon[v.at]=ms.slice(1)}}
+ else heal(v,0,1);
+ log(`${v.n} usa sua habilidade ativa: ${v.act}`,1);after()}
+function fight(){const v=V();let ms=[...mons(v.at)];ms.forEach(m=>{if(v.def)return;const a=T(v,4,m.mh+(v.n=='Diana Stanley'?0:0));const horDmg=Math.max(0,(m.hor-(v.n=='Diana Stanley'?Math.min(m.hor-1,0):0))-a);if(m.hor>a)hurt(v,0,Math.min(m.hor,m.hor-a));if(v.def)return;const b=T(v,3,m.md,1);if(m.dmg>b)hurt(v,m.dmg-b,0);m.h+=b;if(m.h>=m.res){s.mon[v.at]=mons(v.at).filter(x=>x!=m);log(`${v.n} derrota o Monstro ${m.n} em ${N[v.at][0]}.`,1)}else log(`${v.n} enfrenta ${m.n} e não o derrota.`,1)});
+ s.fought[v.i]=1;if(v.def||mons(v.at).length)endEnc();else{s.fought[v.i]=2;render()}}
+function encL(){const x=V(),k=CS[x.at],o=T(x,k);if(o){if(x.im[k]<2){x.im[k]++}else{heal(x,1,1)}}else hurt(x,0,1);endEnc()}
+function encC(){const x=V(),o=T(x,0);if(o){delete s.clues[x.at];x.cl++;const c=PESQUISA[R(PESQUISA.length)];log(`${x.n} resolve Pesquisa em ${N[x.at][0]}: obtém 1 Pista.`,1)}else hurt(x,0,1);endEnc()}
+function encG(){const x=V(),o=T(x,2,-1);if(o){delete s.gates[x.at];x.cl++;log(`${x.n} fecha o Portal em ${N[x.at][0]} e obtém 1 Pista.`,1)}else{if(x.cl&&confirm('Gastar 1 Pista para não perder 3 Sanidade?'))x.cl--;else hurt(x,0,3)}endEnc()}
+function mysteryFor(){const list=MISTERIOS.filter(m=>m.anc==s.anc.n);return list.length>s.mys?list[s.mys]:{local:N[(s.mys*3+1)%N.length][0],pistas:3,titulo:'Mistério Genérico '+(s.mys+1)}}
+function encM(){const x=V();if(s.mys>=3&&!s.awake){alert('O Mistério Final só existe após o despertar.');return}
+ const ms=s.mys<3?mysteryFor():{local:'Arkham',pistas:4};const locIdx=N.findIndex(n=>n[0]==ms.local);
+ if((locIdx>=0?locIdx:1)!=x.at||x.cl<ms.pistas){alert(`Precisa estar em ${ms.local} com ${ms.pistas} Pistas.`);return}
+ x.cl-=ms.pistas;if(s.mys<3){s.mys++;log(`✔ Mistério solucionado (${s.mys}/3): ${ms.titulo||''}`,1);if(s.mys==3&&!s.awake){end(1,`Três Mistérios solucionados. ${s.anc.n} foi banido!`);return}}else{end(1,`Mistério Final solucionado: ${s.anc.fin}`);return}endEnc()}
+function endEnc(){const n=nxt();if(n>=0){s.cur=n}else s.ph='myth';render()}
+function myth(){if(!s.deck.length){end(0,'O baralho do Mito acabou.');return}const c=s.deck.shift();
+ const custom=MITO_CARTAS.find(m=>m.cor==c&&!m.titulo.includes('exemplo'));
+ s.lastMyth=custom||{cor:c,titulo:{G:'Carta Verde',Y:'Carta Amarela',B:'Carta Azul'}[c],texto:'(carta genérica gerada automaticamente — adicione as suas em MITO_CARTAS)'};
+ log(`── FASE DO MITO: ${s.lastMyth.titulo} ── ${s.lastMyth.texto}`,1);
+ if(c!='Y'){s.omen=(s.omen+1)%3;const n=Object.values(s.gates).filter(g=>g==s.omen).length;s.doom-=n}
+ spawnGate();if(c!='G'){const m=Object.keys(s.gates).filter(k=>s.gates[k]==s.omen);if(m.length)m.forEach(k=>spawnMon(+k));else spawnGate()}
+ spawnClue();if(c=='B'){s.inv.forEach(v=>{if(!v.def&&!v.out)hurt(v,0,1)})}
+ chk();if(s.over)return;s.inv.forEach(v=>{if(v.def&&!v.out){Object.assign(v,{hp:v.mh,sn:v.ms,def:0,at:0})}});
+ s.lead=(s.lead+1)%s.inv.length;s.ph='act';s.cur=firstAlive();s.acts=2;s.used={};s.moved=0;s.tkm=0;if(s.cur<0)s.cur=0;render()}
+function render(){const v=V(),ms=s.mys<3?mysteryFor():{local:'Arkham',pistas:4};
+ document.getElementById('st').innerHTML=`<b>${s.anc.n}</b> <span class="tag">${s.ph=='act'?'1 · Ação':s.ph=='enc'?'2 · Encontros':'3 · Mito'}</span> · ${s.inv.length} jogador(es)<br>
+ Perdição: <b>${s.doom}</b>/${s.anc.doom}<div class="bar"><i style="width:${100*s.doom/s.anc.doom}%"></i></div>
+ Presságio: <b>${G[s.omen]} ${OM[s.omen]}</b> · Mistérios: ${s.mys}/3 · Mito restante: ${s.deck.length}<br>
+ ${s.awake?'☠ ANCIÃO DESPERTO — ':''}Objetivo: ${s.mys<3?'gastar '+ms.pistas+' Pistas em '+ms.local:(s.awake?'Mistério Final: '+s.anc.fin:'—')}
+ <div class="m">Chefe: ${s.inv[s.lead].n}${s.ph=='act'?` · Vez de ${v.n}: ${s.acts} ação(ões)`:s.ph=='enc'?` · Encontro de ${v.n}`:''}</div>`;
+ let m='';RT.forEach(r=>{m+=`<line x1="${P[r[0]][0]}" y1="${P[r[0]][1]}" x2="${P[r[1]][0]}" y2="${P[r[1]][1]}" stroke="${r[2]=='T'?'#a33':'#38a'}" stroke-width="2" ${r[2]=='B'?'stroke-dasharray="5 4"':''}/>`});
+ N.forEach((n,i)=>{const [x,y]=P[i],adj=s.ph=='act'&&rtOf(v.at,i);const rad=n[1]=='C'?13:9;m+=`<g onclick="go(${i})" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="${rad}" fill="var(--cd)" stroke="${adj?'#d80':'var(--mu)'}" stroke-width="${adj?3.5:1.5}"/><text x="${x}" y="${y+22}" text-anchor="middle">${n[0]}</text>`;
+  if(i in s.gates)m+=`<text x="${x-4}" y="${y+4}" style="font-size:11px">${G[s.gates[i]]}</text>`;if(mons(i).length)m+=`<text x="${x+9}" y="${y-9}" style="fill:#c22;font-size:10px">☠${mons(i).length}</text>`;if(s.clues[i])m+=`<text x="${x-17}" y="${y-6}" style="font-size:11px">🔍</text>`;
+  s.inv.filter(o=>o.at==i&&!o.def).forEach((o,j)=>m+=`<circle cx="${x-9+j*10}" cy="${y-17}" r="4.5" fill="hsl(${o.i*45+20},70%,45%)"/>`);m+='</g>'});
+ document.getElementById('mp').innerHTML=m+'<text x="8" y="422" style="font-size:9px">Vermelho = Trem/Terra · tracejado = Barco · ◆▲● Portais · ☠ Monstros · 🔍 Pistas</text>';
+ let b='';if(s.ph=='act'){b=`Clique num espaço adjacente para <b>Viajar</b> (depois gaste bilhetes para avançar mais).<br><button onclick="rest()">Descansar</button><button onclick="tick('T')">Bilhete de Trem</button><button onclick="tick('B')">Bilhete de Barco</button><button onclick="acq()">Adquirir Recursos</button><button onclick="trade()">Trocar (dar Pista)</button><button onclick="special()">Ação: ${v.act}</button><button class="ghost" onclick="s.acts=0;endAct();render()">Encerrar ações</button>`}
+ else if(s.ph=='enc'){const ml=mons(v.at);if(ml.length&&s.fought[v.i]!=2)b=`Monstros aqui: ${ml.map(x=>x.n).join(', ')}. <button onclick="fight()">Enfrentar todos (Combate)</button>`;else b=`<button onclick="encL()">Encontro Local (${SK[CS[v.at]]})</button>${s.clues[v.at]?'<button onclick="encC()">Encontro de Pesquisa</button>':''}${v.at in s.gates?'<button onclick="encG()">Encontro em Outro Mundo</button>':''}<button onclick="encM()">Solucionar Mistério</button><button class="ghost" onclick="endEnc()">Passar</button>`}
+ else b='<button onclick="myth()">Resolver Carta do Mito</button>';document.getElementById('bt').innerHTML=b;
+ document.getElementById('cp').innerHTML=s.rs.map(c=>`<div class="card"><b>${c.n}</b><br>Valor ${c.v} · ${SK[c.sk].slice(0,4)}+${c.b}${c.cmb?' (combate)':''}</div>`).join('')+(s.lastMyth?`<div class="card" style="max-width:260px"><b>${s.lastMyth.titulo}</b><br>${s.lastMyth.texto}</div>`:'')+s.inv.flatMap(o=>o.it).map(c=>`<div class="card"><b>${c.n}</b><br>${SK[c.sk].slice(0,4)}+${c.b}</div>`).join('');
+ document.getElementById('iv').innerHTML=s.inv.map(o=>`<div class="c ${o==v&&!s.over?'a':''}"><b>${o.n}</b> — ${N[o.at][0]}${o.def?' (DERROTADO)':''}<br>❤ ${o.hp}/${o.mh} · 🧠 ${o.sn}/${o.ms} · 🔍 ${o.cl} · Bilhetes: ${o.tk.map(t=>t=='T'?'Trem':'Barco').join(', ')||'—'}<br>${SK.map((k,i)=>k.slice(0,4)+' '+(o.sk[i]+o.im[i])).join(' · ')}<br><span class="m">Passiva: ${o.pas}</span></div>`).join('');
+ document.getElementById('lg').innerHTML=s.lg.slice(0,50).map(x=>'<div class="'+(x.includes('FASE DO MITO')?'myth':'')+'">'+x+'</div>').join('')}
+setupUI();
+</script></body></html>
