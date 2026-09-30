@@ -1,57 +1,57 @@
 # 🌌 Eldritch Game
 
-Um projeto independente de jogo de investigação e **horror cósmico**, inspirado em *Eldritch Horror* e desenvolvido como projeto de estudo e experimentação em **HTML, CSS e JavaScript**.
+An independent digital board game project inspired by *Eldritch Horror*, developed as a learning and experimentation project using **HTML, CSS, and JavaScript**.
 
-O projeto começou como um protótipo em HTML e está sendo gradualmente reorganizado em uma arquitetura modular, com o objetivo de transformar suas mecânicas em sistemas independentes, organizados e fáceis de expandir.
+The project started as an HTML prototype and is gradually being rebuilt into a modular architecture, with the goal of making its mechanics easier to understand, maintain, test, and expand.
 
-> ⚠️ **Aviso:** Este é um projeto independente, criado para fins de estudo e desenvolvimento. Não é um produto oficial e não possui vínculo com os detentores dos direitos de *Eldritch Horror*.
-
----
-
-## 🎮 Sobre o projeto
-
-A proposta é desenvolver uma experiência digital própria baseada em conceitos de jogos de investigação cooperativa e horror cósmico.
-
-Os jogadores assumem o papel de **investigadores** que precisam explorar o mundo, enfrentar monstros, resolver mistérios e lidar com acontecimentos sobrenaturais enquanto tentam impedir o avanço de uma ameaça ancestral.
-
-### Principais sistemas planejados
-
-- 🕵️ Investigadores
-- 👁️ Anciões
-- 🗺️ Mapa e locais de viagem
-- 🚂 Movimento e transporte
-- 💰 Recursos
-- 🔮 Artefatos
-- ✨ Feitiços
-- ⚠️ Condições
-- 👹 Monstros
-- 🌀 Portais
-- 🔍 Pistas
-- 📜 Cartas de Mythos
-- 🧩 Mistérios
-- 📖 Cartas de Pesquisa
-- ⚔️ Combate
-- 🎴 Encontros
-- 🔄 Turnos e fases
-- 🏆 Condições de vitória e derrota
+> ⚠️ **Disclaimer:** This is an independent project created for educational and development purposes. It is not an official product and is not affiliated with the owners of *Eldritch Horror*.
 
 ---
 
-## 🧪 Status do projeto
+## 🎮 About the Project
 
-> **🚧 Em desenvolvimento**
+The goal of this project is to create a digital experience based on the concepts of **cooperative investigation and cosmic horror**.
 
-O projeto possui atualmente um **protótipo funcional**, que serve como referência para a reconstrução da versão modular.
+Players take on the role of investigators who explore the world, encounter monsters, solve mysteries, and deal with supernatural events while attempting to prevent an ancient threat from awakening.
 
-### Protótipo
+### Planned Systems
 
-O protótipo inicial concentra grande parte da lógica em um único arquivo HTML e foi criado para testar rapidamente as mecânicas e a estrutura geral do jogo.
+- 🕵️ Investigators
+- 👁️ Ancient Ones
+- 🗺️ Map and travel locations
+- 🚂 Movement and transportation
+- 💰 Resources
+- 🔮 Artifacts
+- ✨ Spells
+- ⚠️ Conditions
+- 👹 Monsters
+- 🌀 Gates
+- 🔍 Clues
+- 📜 Mythos Cards
+- 🧩 Mysteries
+- 📖 Research Cards
+- ⚔️ Combat
+- 🎴 Encounters
+- 🔄 Turns and game phases
+- 🏆 Victory and defeat conditions
 
-Ele continuará no repositório como uma versão de referência.
+---
 
-### Versão modular
+## 🧪 Project Status
 
-A próxima etapa é dividir o projeto em diferentes módulos:
+> **🚧 In Development**
+
+The project currently has a **functional prototype** that serves as a reference for the modular version.
+
+### Prototype
+
+The original prototype keeps most of the game logic inside a single HTML file. It was created to quickly test game mechanics and the overall structure of the project.
+
+The prototype will remain in the repository as a reference version.
+
+### Modular Version
+
+The project is being reorganized into a modular structure:
 
 ```text
 src/
@@ -85,157 +85,156 @@ src/
         └── research.js
 ```
 
-A ideia principal é separar:
+The main goal is to separate:
 
-**dados do jogo** → `data/`
+**Game data** → `data/`
 
-**lógica e sistemas** → `js/`
+**Game logic and systems** → `js/`
 
-Isso permitirá adicionar novos investigadores, cartas, monstros e outros conteúdos sem precisar modificar os sistemas principais.
+This makes it possible to add new investigators, cards, monsters, and other content without modifying the core systems.
 
 ---
 
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
-O projeto utiliza atualmente:
+The project currently uses:
 
 - **HTML5**
 - **CSS3**
 - **JavaScript**
-- **SVG** para elementos gráficos do mapa
+- **SVG** for map elements
 - **Git**
 - **GitHub**
 
-A primeira versão está sendo desenvolvida sem frameworks, com o objetivo de facilitar o aprendizado dos fundamentos de JavaScript e desenvolvimento web.
+The project is currently being developed without frameworks in order to focus on learning the fundamentals of JavaScript and web development.
 
 ---
 
 ## 🗺️ Roadmap
 
-### 🏗️ Estrutura
+### 🏗️ Architecture
 
-- [x] Criar protótipo funcional
-- [ ] Separar HTML, CSS e JavaScript
-- [ ] Criar arquitetura modular
-- [ ] Separar dados dos sistemas
-- [ ] Criar gerenciamento do estado do jogo
-- [ ] Criar sistema de salvamento
+- [x] Create functional prototype
+- [ ] Separate HTML, CSS, and JavaScript
+- [ ] Build modular architecture
+- [ ] Separate game data from game systems
+- [ ] Create centralized game state management
+- [ ] ~~Add save/load functionality~~
 
-### 🕵️ Investigadores
+### 🕵️ Investigators
 
-- [ ] Implementar todos os investigadores
-- [ ] Implementar atributos
-- [ ] Implementar habilidades ativas
-- [ ] Implementar habilidades passivas
-- [ ] Implementar seleção de 1–8 jogadores
-- [ ] Implementar estados dos investigadores
+- [ ] Implement all investigators
+- [ ] Implement investigator attributes
+- [ ] Implement active abilities
+- [ ] Implement passive abilities
+- [ ] Implement 1–8 player setup
+- [ ] Implement investigator states
 
-### 🗺️ Mapa
+### 🗺️ Map
 
-- [ ] Implementar mapa completo
-- [ ] Implementar todos os locais de viagem
-- [ ] Implementar rotas
-- [ ] Implementar viagens
-- [ ] Implementar transporte
-- [ ] Implementar portais
-- [ ] Implementar pistas
-- [ ] Implementar movimentação de monstros
+- [ ] Implement the complete map
+- [ ] Implement all travel locations
+- [ ] Implement routes
+- [ ] Implement travel system
+- [ ] Implement transportation
+- [ ] Implement gates
+- [ ] Implement clues
+- [ ] Implement monster movement
 
-### 🎴 Cartas
+### 🎴 Cards
 
-- [ ] Recursos
-- [ ] Artefatos
-- [ ] Feitiços
-- [ ] Condições
-- [ ] Monstros
+- [ ] Resources
+- [ ] Artifacts
+- [ ] Spells
+- [ ] Conditions
+- [ ] Monsters
 - [ ] Mythos
-- [ ] Mistérios
-- [ ] Pesquisa
+- [ ] Mysteries
+- [ ] Research
 
-### ⚙️ Sistemas
+### ⚙️ Game Systems
 
-- [ ] Sistema de turnos
-- [ ] Sistema de ações
-- [ ] Sistema de encontros
-- [ ] Sistema de combate
-- [ ] Sistema de testes
-- [ ] Sistema de efeitos
-- [ ] Sistema de Mythos
-- [ ] Sistema de Mistérios
-- [ ] Condições de vitória
-- [ ] Condições de derrota
+- [ ] Turn system
+- [ ] Action system
+- [ ] Encounter system
+- [ ] Combat system
+- [ ] Test system
+- [ ] Effect system
+- [ ] Mythos system
+- [ ] Mystery system
+- [ ] Victory conditions
+- [ ] Defeat conditions
 
 ### 🎨 Interface
 
-- [ ] Interface principal
-- [ ] Exibição das cartas
-- [ ] Fichas dos investigadores
-- [ ] Informações do Ancião
-- [ ] Indicadores de jogo
-- [ ] Melhorias de acessibilidade
-- [ ] Interface responsiva
+- [ ] Main game interface
+- [ ] Card display
+- [ ] Investigator panels
+- [ ] Ancient One information
+- [ ] Game indicators
+- [ ] Accessibility improvements
+- [ ] Responsive interface
 
 ---
 
-## 📚 Objetivo educacional
+## 📚 Educational Purpose
 
-Além do desenvolvimento do jogo, este projeto também funciona como um **projeto de aprendizado de programação**.
+This project also serves as a **hands-on programming learning project**.
 
-Durante seu desenvolvimento serão praticados conceitos como:
+During development, the following concepts will be studied and practiced:
 
 - JavaScript
 - HTML
 - CSS
-- Funções
-- Objetos e arrays
-- Programação orientada a objetos
-- Modularização
-- Manipulação do DOM
-- Gerenciamento de estado
+- Functions
+- Objects and arrays
+- Object-oriented programming
+- Modularization
+- DOM manipulation
+- State management
 - Git
 - GitHub
-- Testes
-- Arquitetura de software
-- Desenvolvimento de jogos
+- Testing
+- Software architecture
+- Game development
 
-O objetivo não é apenas fazer o jogo funcionar, mas também **compreender como cada sistema funciona e como organizar um projeto de maior escala**.
+The goal is not only to make the game work, but also to **understand how each system works and how to structure a larger software project**.
 
 ---
 
-## 📁 Estrutura do repositório
+## 📁 Repository Structure
 
 ```text
 eldritch-game/
 │
-├── prototype/       # Protótipo original
+├── prototype/       # Original functional prototype
 │
-├── src/             # Versão principal do jogo
-│   ├── css/         # Estilos
-│   └── js/          # Sistemas e lógica
-│       └── data/    # Dados do jogo
+├── src/             # Main game implementation
+│   ├── css/         # Styles
+│   └── js/          # Game systems and logic
+│       └── data/    # Game data
 │
-├── assets/          # Imagens, ícones e outros recursos
+├── assets/          # Images, icons, and other resources
 │
-├── docs/            # Documentação
+├── docs/            # Documentation
 │
-└── tests/           # Testes
+└── tests/           # Tests
 ```
 
 ---
 
-## 🚧 Desenvolvimento
+## 🚧 Development
 
-O projeto está em constante evolução.
+This project is under active development.
 
-A estrutura, os sistemas e a organização do código podem mudar conforme o desenvolvimento avança e novos conhecimentos são adquiridos.
+The architecture, systems, and code structure may change as the project evolves and new features are implemented.
 
-O protótipo existente **não representa necessariamente a arquitetura final** do projeto.
+The existing prototype **does not necessarily represent the final architecture** of the game.
 
 ---
 
-## 📜 Licença
+## 📜 License
 
-Este projeto é independente e destinado principalmente a fins educacionais e de desenvolvimento pessoal.
+This is an independent project intended primarily for educational and personal development purposes.
 
-*Eldritch Horror* e seus elementos pertencentes à propriedade intelectual original são de seus respectivos detentores. Este projeto não reivindica propriedade sobre materiais protegidos pertencentes a terceiros.
-```
+*Eldritch Horror* and its associated intellectual property belong to their respective owners. This project does not claim ownership of copyrighted materials belonging to third parties.
