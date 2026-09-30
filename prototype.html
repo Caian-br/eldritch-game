@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Vigília do Abismo — versão expandida</title>
+<title>Eldritch Game — versão expandida</title>
 <style>
 :root{--bg:#efe7d3;--fg:#241b10;--cd:#fbf4e2;--ac:#7a1414;--ac2:#b08a2e;--mu:#5f5340;--bd:#c9b88f;--sea:#255b7a;--wild:#3d6f3a;--city:#7a1414;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14100c;--fg:#ecdfc4;--cd:#231b13;--ac:#c85a4a;--ac2:#d9b25f;--mu:#a89675;--bd:#413522;--sea:#6ca5c5;--wild:#7caf70;--city:#df7c6d}}
@@ -42,7 +42,7 @@ svg{width:100%;height:auto;max-width:100%}svg text{fill:var(--fg);font-size:10px
 </style>
 </head>
 <body>
-<h1>🐙 Vigília do Abismo</h1>
+<h1>🐙 Eldritch Game</h1>
 <div id="setup"></div>
 <div id="game">
   <div class="c" id="st"></div>
@@ -97,8 +97,7 @@ const SK=['Conhecimento','Influência','Observação','Força','Determinação']
 const G=['◆','▲','●'],OM=['Verde','Amarelo','Azul'];
 
 /* ============================================================
-   REFERÊNCIAS ANTIGAS PRESERVADAS
-   Estas são as mesmas referências usadas na versão anterior:
+   REFERÊNCIAS
    RES = recursos usados pela lógica do jogo
    MON = monstros usados pela lógica do jogo
    CS  = tipo de encontro por espaço
@@ -130,8 +129,7 @@ const MON=[
 
 /* ============================================================
    2) INVESTIGADORES — 16 modelos
-   Os campos active/passive são exatamente o tipo de informação
-   que você pode usar como modelo para futuras fichas.
+   Os campos active/passive são informações modelo para futuras fichas.
    ============================================================ */
 const INV=[
  {n:'Silas Marsh',occ:'O Marinheiro',hp:8,sn:4,sk:[1,3,3,3,3],active:'Ação: mova 1 espaço por uma rota de Barco; depois realize 1 ação adicional.',passive:'Se estiver em um espaço de Mar, os investigadores em seu espaço rolam 1 dado adicional ao resolver testes.'},
@@ -153,7 +151,7 @@ const INV=[
 ];
 
 /* ============================================================
-   3) ANCIÕES — dados visíveis nas referências fornecidas
+   3) ANCIÕES
    ============================================================ */
 const ANC=[
  {n:'Shub-Niggurath',sub:'A Cabra Negra dos Bosques',doom:13,my:[[1,2,1],[3,2,1],[2,4,0]],setup:'Separe 2 Carniçais, 2 Filhotes de Bode e 1 Jovem Sombrio.',active:'Quando o presságio exigir, apareça 1 Monstro em um espaço aleatório. Se houver 10 ou mais Monstros no tabuleiro, avance a Perdição em 2.',finalName:'Batalha no Bosque',final:'O Monstro Épico Shub-Niggurath surge no Coração da África. Depois, mova para esse espaço todos os Carniçais, Filhotes de Bode e Jovens Sombrios do tabuleiro. Se Shub-Niggurath for derrotada, os investigadores vencem.'},
@@ -219,7 +217,7 @@ const FINAL_MYSTERY_CARDS=ANC.map((a,i)=>({id:'final_'+i,type:'Mistério Final',
 // Por isso, os quatro modelos abaixo ficam prontos para edição manual.
 const RESEARCH_CARDS=['A','B','C','D'].map((v,i)=>({id:'research_'+v.toLowerCase()+'_001',type:'Pesquisa',name:`Carta de Pesquisa ${v}`,subtitle:'MODELO EDITÁVEL',count:8,pool:32,text:'Local, introdução, opções, testes e resultados: EDITAR.',tags:['Pesquisa','8 cartas desta família']}));
 
-// === OUTRAS PILHAS DE ENCONTRO (para a contagem ficar explícita) ===
+// === OUTRAS PILHAS DE ENCONTRO ===
 const ENCOUNTER_MODEL_CARDS=[
  {id:'enc_america_001',type:'Encontro',name:'América — Modelo',subtitle:'Baralho correspondente',count:8,pool:122,text:'Carta de Encontro da América: EDITAR.',tags:['8 cartas']},
  {id:'enc_europe_001',type:'Encontro',name:'Europa — Modelo',subtitle:'Baralho correspondente',count:8,pool:122,text:'Carta de Encontro da Europa: EDITAR.',tags:['8 cartas']},
@@ -239,7 +237,7 @@ const CARD_LIBRARY=[...RESOURCE_CARDS,...ARTIFACT_CARDS,...SPELL_CARDS,...CONDIT
 */
 
 /* ============================================================
-   5) MODELOS DE CARTAS DO ANCIÃO — composição do baralho do Mito
+   5) MODELOS DE CARTAS DO ANCIÃO — composição do baralho do Mythos
    ============================================================ */
 const ancMythosMeta=anc=>({
  stage1:{verde:anc.my[0][0],amarela:anc.my[0][1],azul:anc.my[0][2]},
@@ -301,7 +299,6 @@ function nw(){
  $('setup').style.display='none';$('game').style.display='block';render();
 }
 
-/* O log foi removido da interface e das mensagens de jogo. */
 function log(){}
 
 function spawnMon(c){
